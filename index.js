@@ -1,8 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const { uniqueNamesGenerator, names } = require("unique-names-generator");
 
-const WilderModel = require("./models/Wilder");
+const { createWilder, getAllWilders } = require("./controllers/wilder");
 
 mongoose
   .connect(
@@ -11,35 +10,13 @@ mongoose
   )
   .then(() => {
     console.log("Connected to database");
+
     const app = express();
+    app.use(express.urlencoded({ extended: true }));
+    app.use(express.json());
 
-    app.get("/", (req, res) => {
-      res.json({ message: "Bonjour le monde" });
-    });
-    app.get("/random-name", (req, res) => {
-      res.json({ name: uniqueNamesGenerator({ dictionaries: [names] }) });
-    });
-
-    app.post("/wilders", (req, res) => {
-      WilderModel.init().then(() => {
-        const firstWilder = WilderModel({
-          name: "First Wilder",
-          city: "San Francisco",
-          skills: [
-            { title: "HTML", votes: 3 },
-            { title: "React", votes: 5 },
-          ],
-        });
-        firstWilder
-          .save()
-          .then((result) => {
-            res.json({ result });
-          })
-          .catch((err) => {
-            res.status(500).json({ error: err });
-          });
-      });
-    });
+    app.get("/wilders", getAllWilders);
+    app.post("/wilders", createWilder);
 
     const PORT = 3001;
     app.listen(PORT, () => {

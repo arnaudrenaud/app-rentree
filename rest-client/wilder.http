@@ -1,0 +1,23 @@
+# http
+POST http://localhost:3001/wilders HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Other Wilder",
+    "city": "Londres",
+    "skills": [
+        {
+            "title": "express",
+            "votes": 5
+        },
+        {
+            "title": "mongo",
+            "votes": 12
+        }
+    ]
+}
+
+###
+
+# http
+GET http://localhost:3001/wilders HTTP/1.1
