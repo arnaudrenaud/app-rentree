@@ -1,0 +1,27 @@
+Ressource wilders :
+
+Lecture :
+GET /wilders/<id>
+GET /wilders/<id>?fields=id,name,campus
+GET /wilders
+
+Ecriture :
+POST /wilders (body : {id: …, name: …, …})
+DELETE /wilders/<id>
+PUT /wilders/<id> (body: {id: …, name: …, campus: …, …})
+PATCH /wilders/<id> (body: {campus: …})
+
+PUT /wilders/<id>?action=exclude
+PUT /wilders/<id>?action=notify_admission
+
+======
+
+Ressource campus :
+
+Lecture :
+GET /campuses/<id>
+GET /campuses
+GET /campuses/<id>/wilders
+
+Ecriture :
+POST /campuses
