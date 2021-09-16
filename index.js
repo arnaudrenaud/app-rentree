@@ -8,6 +8,7 @@ const {
   createWilder,
   getAllWilders,
   deleteWilder,
+  updateWilder,
 } = require("./controllers/wilder");
 const WilderModel = require("./models/Wilder");
 
@@ -23,6 +24,7 @@ const runServer = async () => {
 
   app.get("/wilders", getAllWilders);
   app.post("/wilders", createWilder);
+  app.put("/wilders/:name", updateWilder);
   app.delete("/wilders/:name", deleteWilder);
 
   app.use((req, res) => {

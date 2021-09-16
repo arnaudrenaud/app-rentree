@@ -24,8 +24,15 @@ const getAllWilders = async (req, res) => {
   res.json({ success: true, result: wilders });
 };
 
+const updateWilder = async (req, res) => {
+  const name = req.params.name;
+  const result = await WilderModel.updateOne({ name }, req.body);
+  res.json({ success: true, result });
+};
+
 module.exports = {
   createWilder,
   deleteWilder,
   getAllWilders,
+  updateWilder,
 };

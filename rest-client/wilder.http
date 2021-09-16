@@ -31,3 +31,24 @@ GET http://localhost:3001/nexistepas HTTP/1.1
 
 # http
 DELETE  http://localhost:3001/wilders/arnaud HTTP/1.1
+
+###
+
+# http
+PUT  http://localhost:3001/wilders/arnaud HTTP/1.1
+content-type: application/json
+
+{
+    "name": "arnaud",
+    "city": "Paris",
+    "skills": [
+        {
+            "title": "express",
+            "votes": 5
+        },
+        {
+            "title": "postgresql",
+            "votes": 12
+        }
+    ]
+}
