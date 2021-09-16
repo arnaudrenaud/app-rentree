@@ -1,13 +1,13 @@
+const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
+
+dotenv.config();
 
 const { createWilder, getAllWilders } = require("./controllers/wilder");
 
 mongoose
-  .connect(
-    "mongodb://127.0.0.1:27017/wilders-app?directConnection=true&serverSelectionTimeoutMS=2000",
-    { autoIndex: true }
-  )
+  .connect(process.env.MONGO_URL, { autoIndex: true })
   .then(() => {
     console.log("Connected to database");
 
