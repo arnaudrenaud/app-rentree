@@ -20,6 +20,12 @@ const runServer = async () => {
   app.get("/wilders", getAllWilders);
   app.post("/wilders", createWilder);
 
+  app.use((req, res) => {
+    res
+      .status(404)
+      .json({ success: false, result: "Ressource does not exist." });
+  });
+
   const PORT = 3001;
   app.listen(PORT, () => {
     console.log(`Example app listening at http://localhost:${PORT}`);
