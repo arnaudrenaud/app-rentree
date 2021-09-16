@@ -3,7 +3,7 @@ POST http://localhost:3001/wilders HTTP/1.1
 content-type: application/json
 
 {
-    "name": "Wilder 3",
+    "name": "arnaud",
     "city": "Londres",
     "skills": [
         {
@@ -21,3 +21,13 @@ content-type: application/json
 
 # http
 GET http://localhost:3001/wilders HTTP/1.1
+
+###
+
+# http
+GET http://localhost:3001/nexistepas HTTP/1.1
+
+###
+
+# http
+DELETE  http://localhost:3001/wilders/arnaud HTTP/1.1

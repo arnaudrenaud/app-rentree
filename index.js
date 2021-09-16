@@ -4,7 +4,11 @@ const mongoose = require("mongoose");
 
 dotenv.config();
 
-const { createWilder, getAllWilders } = require("./controllers/wilder");
+const {
+  createWilder,
+  getAllWilders,
+  deleteWilder,
+} = require("./controllers/wilder");
 const WilderModel = require("./models/Wilder");
 
 const runServer = async () => {
@@ -19,6 +23,7 @@ const runServer = async () => {
 
   app.get("/wilders", getAllWilders);
   app.post("/wilders", createWilder);
+  app.delete("/wilders/:name", deleteWilder);
 
   app.use((req, res) => {
     res

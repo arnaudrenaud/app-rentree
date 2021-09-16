@@ -10,6 +10,15 @@ const createWilder = async (req, res) => {
   }
 };
 
+const deleteWilder = async (req, res) => {
+  const name = req.params.name;
+  const result = await WilderModel.deleteOne({ name });
+  if (result.deletedCount === 0) {
+    res.status(404).json({ success: false, result: "Wilder does not exist." });
+  }
+  res.json({ success: true, result: result });
+};
+
 const getAllWilders = async (req, res) => {
   const wilders = await WilderModel.find();
   res.json({ success: true, result: wilders });
@@ -17,5 +26,6 @@ const getAllWilders = async (req, res) => {
 
 module.exports = {
   createWilder,
+  deleteWilder,
   getAllWilders,
 };
