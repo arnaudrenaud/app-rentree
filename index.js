@@ -5,22 +5,29 @@ const mongoose = require("mongoose");
 dotenv.config();
 
 const { createWilder, getAllWilders } = require("./controllers/wilder");
+const WilderModel = require("./models/Wilder");
 
-mongoose
-  .connect(process.env.MONGO_URL, { autoIndex: true })
-  .then(() => {
+const runServer = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URL, { autoIndex: true });
     console.log("Connected to database");
+  } catch (error) {
+    console.error(error);
+  }
 
-    const app = express();
-    app.use(express.urlencoded({ extended: true }));
-    app.use(express.json());
+  await WilderModel.init();
 
-    app.get("/wilders", getAllWilders);
-    app.post("/wilders", createWilder);
+  const app = express();
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
 
-    const PORT = 3001;
-    app.listen(PORT, () => {
-      console.log(`Example app listening at http://localhost:${PORT}`);
-    });
-  })
-  .catch((err) => console.log(err));
+  app.get("/wilders", getAllWilders);
+  app.post("/wilders", createWilder);
+
+  const PORT = 3001;
+  app.listen(PORT, () => {
+    console.log(`Example app listening at http://localhost:${PORT}`);
+  });
+};
+
+runServer();

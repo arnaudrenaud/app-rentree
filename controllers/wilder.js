@@ -1,25 +1,18 @@
 const WilderModel = require("../models/Wilder");
 
-const createWilder = (req, res) => {
-  WilderModel.init().then(() => {
-    const wilder = WilderModel(req.body);
-    wilder
-      .save()
-      .then((result) => {
-        res.json({ success: true, result: result });
-      })
-      .catch((err) => {
-        res.status(500).json({ success: false, result: err });
-      });
-  });
+const createWilder = async (req, res) => {
+  const wilder = WilderModel(req.body);
+  try {
+    const result = await wilder.save();
+    res.json({ success: true, result: result });
+  } catch (error) {
+    res.status(400).json({ success: false, result: error.message });
+  }
 };
 
-const getAllWilders = (req, res) => {
-  WilderModel.init().then(() => {
-    WilderModel.find().then((wilders) => {
-      res.json({ success: true, result: wilders });
-    });
-  });
+const getAllWilders = async (req, res) => {
+  const wilders = await WilderModel.find();
+  res.json({ success: true, result: wilders });
 };
 
 module.exports = {

@@ -3,7 +3,7 @@ POST http://localhost:3001/wilders HTTP/1.1
 content-type: application/json
 
 {
-    "name": "Other Wilder",
+    "name": "Wilder 3",
     "city": "Londres",
     "skills": [
         {
