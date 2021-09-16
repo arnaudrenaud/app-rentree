@@ -8,12 +8,8 @@ const { createWilder, getAllWilders } = require("./controllers/wilder");
 const WilderModel = require("./models/Wilder");
 
 const runServer = async () => {
-  try {
-    await mongoose.connect(process.env.MONGO_URL, { autoIndex: true });
-    console.log("Connected to database");
-  } catch (error) {
-    console.error(error);
-  }
+  await mongoose.connect(process.env.MONGO_URL, { autoIndex: true });
+  console.log("Connected to database");
 
   await WilderModel.init();
 
