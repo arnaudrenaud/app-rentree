@@ -1,9 +1,24 @@
-import * as styled from "./App.styled";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 import "./App.css";
+import * as styled from "./App.styled";
 import Wilder from "./Wilder";
 
 const App = () => {
+  const [wilders, setWilders] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios("/wilders");
+      setWilders(response.data.result);
+    };
+
+    fetchData();
+  }, []);
+
+  console.log(`rendering App with wilders: ${wilders}`);
+
   return (
     <div>
       <styled.Header>
@@ -14,7 +29,16 @@ const App = () => {
       <styled.Container>
         <h2>Wilders</h2>
         <section className="card-row">
-          <Wilder />
+          {wilders.map((wilder) => {
+            return (
+              <Wilder
+                key={wilder._id}
+                name={wilder.name}
+                city={wilder.city}
+                skills={wilder.skills}
+              />
+            );
+          })}
         </section>
       </styled.Container>
       <footer>

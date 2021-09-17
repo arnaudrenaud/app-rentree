@@ -1,26 +1,14 @@
+import PropTypes from "prop-types";
+
 import blank_profile from "./images/blank-profile-picture-female.png";
-import Skill from "./Skill";
+import Skill, { SkillPropType } from "./Skill";
 
-const Wilder = () => {
-  const skills = [
-    { title: "HTML", votes: 3 },
-    { title: "CSS", votes: 3 },
-    { title: "TypeScript", votes: 15 },
-    { title: "React", votes: 3 },
-    { title: "Node.js", votes: 2 },
-    { title: "Python", votes: 10 },
-  ];
-
+const Wilder = ({ name, city, skills }) => {
   return (
     <article className="card">
       <img src={blank_profile} alt="Jane Doe Profile" />
-      <h3>Jane Doe</h3>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat.
-      </p>
+      <h3>{name}</h3>
+      <p>{city}</p>
       <h4>Wild Skills</h4>
       <ul className="skills">
         {skills.map((skill) => {
@@ -31,6 +19,12 @@ const Wilder = () => {
       </ul>
     </article>
   );
+};
+
+Wilder.propTypes = {
+  name: PropTypes.string.isRequired,
+  city: PropTypes.string.isRequired,
+  skills: PropTypes.arrayOf(PropTypes.shape(SkillPropType)),
 };
 
 export default Wilder;

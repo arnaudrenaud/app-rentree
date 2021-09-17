@@ -10,9 +10,11 @@ const Skill = ({ title, votes }) => {
   );
 };
 
-Skill.propTypes = {
+export const SkillPropType = {
   title: PropTypes.string.isRequired,
   votes: PropTypes.number.isRequired,
 };
+
+Skill.propTypes = SkillPropType;
 
 export default Skill;
