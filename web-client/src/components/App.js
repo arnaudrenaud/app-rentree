@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import "./App.css";
 import * as styled from "./App.styled";
+import CreateWilderForm from "./CreateWilderForm";
 import Wilder from "./Wilder";
 
 const App = () => {
@@ -16,8 +17,6 @@ const App = () => {
 
     fetchData();
   }, []);
-
-  console.log(`rendering App with wilders: ${wilders}`);
 
   return (
     <div>
@@ -41,6 +40,7 @@ const App = () => {
           })}
         </section>
       </styled.Container>
+      <CreateWilderForm />
       <footer>
         <styled.Container>
           <p>&copy; 2020 Wild Code School</p>
