@@ -2,28 +2,28 @@ import axios from "axios";
 import { useState } from "react";
 import PropTypes from "prop-types";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import * as styled from "./CreateWilderForm.styled";
 
 const CreateWilderForm = ({ onSuccess }) => {
   const [shown, setShown] = useState(true);
   const [name, setName] = useState("");
   const [city, setCity] = useState("Bordeaux");
-  const [status, setStatus] = useState(null);
+
+  const notifyWilderHasBeenCreated = () =>
+    toast.success("Wilder has been created");
+  const notifyError = (error) => toast.error(error);
 
   const submitForm = async (event) => {
     event.preventDefault();
     try {
       await axios.post("/wilders", { name, city });
-      setStatus({
-        success: true,
-        message: "Wilder successfully created.",
-      });
+      notifyWilderHasBeenCreated();
       onSuccess();
     } catch (error) {
-      setStatus({
-        success: false,
-        message: error.response.data.result,
-      });
+      notifyError(error.response.data.result);
     }
   };
 
@@ -65,11 +65,7 @@ const CreateWilderForm = ({ onSuccess }) => {
             <br />
             <input type="submit" />
           </form>
-          {status && (
-            <styled.StatusMessage success={status.success}>
-              {status.message}
-            </styled.StatusMessage>
-          )}
+          <ToastContainer position="bottom-right" />
         </>
       )}
     </styled.Container>
