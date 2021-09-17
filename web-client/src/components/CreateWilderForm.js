@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
+import PropTypes from "prop-types";
 
 import * as styled from "./CreateWilderForm.styled";
 
-const CreateWilderForm = () => {
+const CreateWilderForm = ({ onSuccess }) => {
   const [shown, setShown] = useState(true);
   const [name, setName] = useState("");
   const [city, setCity] = useState("Bordeaux");
@@ -17,6 +18,7 @@ const CreateWilderForm = () => {
         success: true,
         message: "Wilder successfully created.",
       });
+      onSuccess();
     } catch (error) {
       setStatus({
         success: false,
@@ -72,6 +74,10 @@ const CreateWilderForm = () => {
       )}
     </styled.Container>
   );
+};
+
+CreateWilderForm.propTypes = {
+  onSuccess: PropTypes.func,
 };
 
 export default CreateWilderForm;

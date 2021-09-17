@@ -9,13 +9,13 @@ import Wilder from "./Wilder";
 const App = () => {
   const [wilders, setWilders] = useState([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios("/wilders");
-      setWilders(response.data.result);
-    };
+  const fetchWilders = async () => {
+    const response = await axios("/wilders");
+    setWilders(response.data.result);
+  };
 
-    fetchData();
+  useEffect(() => {
+    fetchWilders();
   }, []);
 
   return (
@@ -40,7 +40,7 @@ const App = () => {
           })}
         </section>
       </styled.Container>
-      <CreateWilderForm />
+      <CreateWilderForm onSuccess={fetchWilders} />
       <footer>
         <styled.Container>
           <p>&copy; 2020 Wild Code School</p>
