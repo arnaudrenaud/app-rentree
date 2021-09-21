@@ -2,8 +2,6 @@ import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
 
-dotenv.config();
-
 import {
   createWilder,
   getAllWilders,
@@ -12,12 +10,16 @@ import {
 } from "./controllers/wilder";
 import WilderModel from "./models/Wilder";
 
+dotenv.config();
+
 const runServer = async () => {
   const { MONGO_URL } = process.env;
   if (!MONGO_URL) {
     throw Error("A MONGO_URL must be provided in environment.");
   }
   await mongoose.connect(MONGO_URL, { autoIndex: true });
+
+  // eslint-disable-next-line no-console
   console.log("Connected to database");
 
   await WilderModel.init();
@@ -39,6 +41,7 @@ const runServer = async () => {
 
   const PORT = 3001;
   app.listen(PORT, () => {
+    // eslint-disable-next-line no-console
     console.log(`Example app listening at http://localhost:${PORT}`);
   });
 };
