@@ -1,19 +1,23 @@
-const dotenv = require("dotenv");
-const express = require("express");
-const mongoose = require("mongoose");
+import dotenv from "dotenv";
+import express from "express";
+import mongoose from "mongoose";
 
 dotenv.config();
 
-const {
+import {
   createWilder,
   getAllWilders,
   deleteWilder,
   updateWilder,
-} = require("./controllers/wilder");
-const WilderModel = require("./models/Wilder");
+} from "./controllers/wilder";
+import WilderModel from "./models/Wilder";
 
 const runServer = async () => {
-  await mongoose.connect(process.env.MONGO_URL, { autoIndex: true });
+  const { MONGO_URL } = process.env;
+  if (!MONGO_URL) {
+    throw Error("A MONGO_URL must be provided in environment.");
+  }
+  await mongoose.connect(MONGO_URL, { autoIndex: true });
   console.log("Connected to database");
 
   await WilderModel.init();

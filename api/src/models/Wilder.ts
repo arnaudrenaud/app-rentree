@@ -7,4 +7,4 @@ const WilderSchema = new Schema({
 });
 const WilderModel = model("wilder", WilderSchema);
 
-module.exports = WilderModel;
+export default WilderModel;

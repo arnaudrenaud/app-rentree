@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node .",
-    "start:watch": "nodemon ."
+    "build": "tsc",
+    "build:watch": "tsc -w",
+    "start": "node build/.",
+    "start:watch": "npm run build && (npm run build:watch & nodemon build/.)"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +18,8 @@
     "mongoose": "^6.0.5"
   },
   "devDependencies": {
-    "nodemon": "^2.0.12"
+    "@types/express": "^4.17.13",
+    "nodemon": "^2.0.12",
+    "typescript": "^4.4.3"
   }
 }
