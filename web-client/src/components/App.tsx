@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { WilderType } from "../types";
 
 import "./App.css";
 import * as styled from "./App.styled";
@@ -7,7 +8,7 @@ import CreateWilderForm from "./CreateWilderForm";
 import Wilder from "./Wilder";
 
 const App = () => {
-  const [wilders, setWilders] = useState([]);
+  const [wilders, setWilders] = useState<WilderType[]>([]);
 
   const fetchWilders = async () => {
     const response = await axios("/wilders");

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Votes = styled.span`
+export const Votes = styled.span<{ children: number }>`
   /* Center the content */
   align-items: center;
   display: flex;

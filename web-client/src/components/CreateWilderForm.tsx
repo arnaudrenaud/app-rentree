@@ -1,29 +1,35 @@
 import axios from "axios";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import PropTypes from "prop-types";
 
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, ToastContent } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import * as styled from "./CreateWilderForm.styled";
 
-const CreateWilderForm = ({ onSuccess }) => {
+const CreateWilderForm = ({
+  onSuccess,
+}: {
+  onSuccess: () => Promise<void>;
+}) => {
   const [shown, setShown] = useState(true);
   const [name, setName] = useState("");
   const [city, setCity] = useState("Bordeaux");
 
   const notifyWilderHasBeenCreated = () =>
     toast.success("Wilder has been created");
-  const notifyError = (error) => toast.error(error);
+  const notifyError = (error: ToastContent) => toast.error(error);
 
-  const submitForm = async (event) => {
+  const submitForm = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       await axios.post("/wilders", { name, city });
       notifyWilderHasBeenCreated();
       onSuccess();
     } catch (error) {
-      notifyError(error.response.data.result);
+      if (axios.isAxiosError(error)) {
+        notifyError(error.response?.data.result);
+      }
     }
   };
 
