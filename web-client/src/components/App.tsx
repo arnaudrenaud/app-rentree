@@ -4,15 +4,18 @@ import { WilderType } from "../types";
 
 import "./App.css";
 import * as styled from "./App.styled";
+import Loader from "./atoms/Loader";
 import CreateWilderForm from "./CreateWilderForm";
 import Wilder from "./Wilder";
 
 const App = () => {
   const [wilders, setWilders] = useState<WilderType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchWilders = async () => {
     const response = await axios("/wilders");
     setWilders(response.data.result);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -28,18 +31,22 @@ const App = () => {
       </styled.Header>
       <styled.Container>
         <h2>Wilders</h2>
-        <section className="card-row">
-          {wilders.map((wilder) => {
-            return (
-              <Wilder
-                key={wilder._id}
-                name={wilder.name}
-                city={wilder.city}
-                skills={wilder.skills}
-              />
-            );
-          })}
-        </section>
+        {loading ? (
+          <Loader />
+        ) : (
+          <section className="card-row">
+            {wilders.map((wilder) => {
+              return (
+                <Wilder
+                  key={wilder._id}
+                  name={wilder.name}
+                  city={wilder.city}
+                  skills={wilder.skills}
+                />
+              );
+            })}
+          </section>
+        )}
       </styled.Container>
       <CreateWilderForm onSuccess={fetchWilders} />
       <footer>
