@@ -3,10 +3,16 @@ import PropTypes from "prop-types";
 import blank_profile from "./images/blank-profile-picture-female.png";
 import Skill, { SkillPropType } from "./Skill";
 import { WilderType } from "../types";
+import Button from "./atoms/Button";
+import { useState } from "react";
+import Modal from "./templates/Modal";
 
 type WilderProps = Omit<WilderType, "_id">;
 
 const Wilder = ({ name, city, skills }: WilderProps) => {
+  const [askForConfirmationToDelete, setAskForConfirmationToDelete] =
+    useState<boolean>(false);
+
   return (
     <article className="card">
       <img src={blank_profile} alt="Jane Doe Profile" />
@@ -20,6 +26,14 @@ const Wilder = ({ name, city, skills }: WilderProps) => {
           );
         })}
       </ul>
+      <Button
+        onClick={() => {
+          setAskForConfirmationToDelete(true);
+        }}
+      >
+        Supprimer
+      </Button>
+      {askForConfirmationToDelete && <Modal></Modal>}
     </article>
   );
 };
