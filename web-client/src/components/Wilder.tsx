@@ -6,12 +6,25 @@ import { WilderType } from "../types";
 import Button from "./atoms/Button";
 import { useState } from "react";
 import Modal from "./templates/Modal";
+import Dialog from "./molecules/Dialog";
 
 type WilderProps = Omit<WilderType, "_id">;
 
 const Wilder = ({ name, city, skills }: WilderProps) => {
   const [askForConfirmationToDelete, setAskForConfirmationToDelete] =
     useState<boolean>(false);
+
+  const deleteWilder = () => {
+    console.log("deleted");
+  };
+
+  const showConfirmationToDelete = () => {
+    setAskForConfirmationToDelete(true);
+  };
+
+  const hideConfirmationToDelete = () => {
+    setAskForConfirmationToDelete(false);
+  };
 
   return (
     <article className="card">
@@ -26,14 +39,16 @@ const Wilder = ({ name, city, skills }: WilderProps) => {
           );
         })}
       </ul>
-      <Button
-        onClick={() => {
-          setAskForConfirmationToDelete(true);
-        }}
-      >
-        Supprimer
-      </Button>
-      {askForConfirmationToDelete && <Modal></Modal>}
+      <Button onClick={showConfirmationToDelete}>Supprimer</Button>
+      {askForConfirmationToDelete && (
+        <Modal onClose={hideConfirmationToDelete}>
+          <Dialog
+            text={`${name} sera supprimé.`}
+            onCancel={hideConfirmationToDelete}
+            onConfirmation={deleteWilder}
+          />
+        </Modal>
+      )}
     </article>
   );
 };
