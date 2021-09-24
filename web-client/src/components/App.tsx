@@ -18,6 +18,10 @@ const App = () => {
     setLoading(false);
   };
 
+  const removeWilder = (name: string) => {
+    setWilders(wilders.filter((wilder) => wilder.name !== name));
+  };
+
   useEffect(() => {
     fetchWilders();
   }, []);
@@ -42,6 +46,7 @@ const App = () => {
                   name={wilder.name}
                   city={wilder.city}
                   skills={wilder.skills}
+                  onDelete={removeWilder}
                 />
               );
             })}

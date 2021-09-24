@@ -7,15 +7,24 @@ import Button from "./atoms/Button";
 import { useState } from "react";
 import Modal from "./templates/Modal";
 import Dialog from "./molecules/Dialog";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-type WilderProps = Omit<WilderType, "_id">;
+type WilderProps = Pick<WilderType, "name" | "city" | "skills"> & {
+  onDelete: (name: string) => void;
+};
 
-const Wilder = ({ name, city, skills }: WilderProps) => {
+const Wilder = ({ name, city, skills, onDelete }: WilderProps) => {
   const [askForConfirmationToDelete, setAskForConfirmationToDelete] =
     useState<boolean>(false);
 
-  const deleteWilder = () => {
-    console.log("deleted");
+  const notifyWilderHasBeenDeleted = () =>
+    toast.success(`${name} has been deleted`);
+
+  const deleteWilder = async () => {
+    await axios.delete(`/wilders/${name}`);
+    notifyWilderHasBeenDeleted();
+    onDelete(name);
   };
 
   const showConfirmationToDelete = () => {
@@ -57,6 +66,7 @@ Wilder.propTypes = {
   name: PropTypes.string.isRequired,
   city: PropTypes.string.isRequired,
   skills: PropTypes.arrayOf(PropTypes.shape(SkillPropType)),
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default Wilder;
