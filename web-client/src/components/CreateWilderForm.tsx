@@ -6,13 +6,13 @@ import { ToastContainer, toast, ToastContent } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import * as styled from "./CreateWilderForm.styled";
+import { Link } from "react-router-dom";
 
 const CreateWilderForm = ({
   onSuccess,
 }: {
   onSuccess: () => Promise<void>;
 }) => {
-  const [shown, setShown] = useState(true);
   const [name, setName] = useState("");
   const [city, setCity] = useState("Bordeaux");
 
@@ -35,45 +35,38 @@ const CreateWilderForm = ({
 
   return (
     <styled.Container>
-      <button
-        onClick={() => {
-          setShown(!shown);
-        }}
-      >
-        {shown ? "Cacher le formulaire" : "Afficher le formulaire"}
-      </button>
-      {shown && (
-        <>
-          <form onSubmit={submitForm}>
-            <label>
-              Name:{" "}
-              <input
-                type="text"
-                name="name"
-                value={name}
-                onChange={(event) => {
-                  setName(event.currentTarget.value);
-                }}
-              />
-            </label>
-            <br />
-            <label>
-              City :{" "}
-              <input
-                type="text"
-                name="city"
-                value={city}
-                onChange={(event) => {
-                  setCity(event.currentTarget.value);
-                }}
-              />
-            </label>
-            <br />
-            <input type="submit" />
-          </form>
-          <ToastContainer position="bottom-right" />
-        </>
-      )}
+      <>
+        <Link to="/">Afficher la liste des wilders</Link>
+        <h2>Ajouter un nouveau wilder</h2>
+        <form onSubmit={submitForm}>
+          <label>
+            Name:{" "}
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={(event) => {
+                setName(event.currentTarget.value);
+              }}
+            />
+          </label>
+          <br />
+          <label>
+            City :{" "}
+            <input
+              type="text"
+              name="city"
+              value={city}
+              onChange={(event) => {
+                setCity(event.currentTarget.value);
+              }}
+            />
+          </label>
+          <br />
+          <input type="submit" />
+        </form>
+        <ToastContainer position="bottom-right" />
+      </>
     </styled.Container>
   );
 };
