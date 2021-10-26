@@ -2,6 +2,8 @@ import { Args, Mutation, Query, Resolver } from "type-graphql";
 
 import WilderModel, { Wilder } from "../models/Wilder";
 import CreateWilderInput from "./CreateWilderInput";
+import DeleteWilderInput from "./DeleteWilderInput";
+import UpdateWilderInput from "./UpdateWilderInput";
 
 @Resolver(Wilder)
 class WilderResolver {
@@ -17,23 +19,32 @@ class WilderResolver {
     const result = await wilder.save();
     return result;
   }
+
+  @Mutation(() => Wilder)
+  async deleteWilder(@Args() { name }: DeleteWilderInput) {
+    const wilder = await WilderModel.findOne({ name });
+    if (!wilder) {
+      throw Error("Wilder does not exist.");
+    }
+    await WilderModel.deleteOne({ name });
+    return wilder;
+  }
+
+  @Mutation(() => Wilder)
+  async updateWilder(
+    @Args() { initialName, newName, city }: UpdateWilderInput
+  ) {
+    const wilder = await WilderModel.findOne({ name: initialName });
+    if (!wilder) {
+      throw Error("Wilder does not exist.");
+    }
+    const result = await WilderModel.findOneAndUpdate(
+      { name: initialName },
+      { name: newName, city },
+      { returnOriginal: false }
+    );
+    return result;
+  }
 }
 
 export default WilderResolver;
-
-// const deleteWilder = async (req: Request, res: Response) => {
-//   const { name } = req.params;
-//   const result = await WilderModel.deleteOne({ name });
-//   if (result.deletedCount === 0) {
-//     res.status(404).json({ success: false, result: "Wilder does not exist." });
-//   }
-//   res.json({ success: true, result });
-// };
-
-// const updateWilder = async (req: Request, res: Response) => {
-//   const { name } = req.params;
-//   const result = await WilderModel.updateOne({ name }, req.body);
-//   res.json({ success: true, result });
-// };
-
-// export { createWilder, deleteWilder, getAllWilders, updateWilder };
