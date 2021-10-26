@@ -1,14 +1,11 @@
+import { ApolloServer } from "apollo-server";
 import dotenv from "dotenv";
-import express from "express";
 import mongoose from "mongoose";
+import "reflect-metadata";
+import { buildSchema } from "type-graphql";
 
-import {
-  createWilder,
-  getAllWilders,
-  deleteWilder,
-  updateWilder,
-} from "./controllers/wilder";
 import WilderModel from "./models/Wilder";
+import WilderResolver from "./resolvers/WilderResolver";
 
 dotenv.config();
 
@@ -24,25 +21,12 @@ const runServer = async () => {
 
   await WilderModel.init();
 
-  const app = express();
-  app.use(express.urlencoded({ extended: true }));
-  app.use(express.json());
+  const schema = await buildSchema({ resolvers: [WilderResolver] });
+  const server = new ApolloServer({ schema });
 
-  app.get("/wilders", getAllWilders);
-  app.post("/wilders", createWilder);
-  app.put("/wilders/:name", updateWilder);
-  app.delete("/wilders/:name", deleteWilder);
-
-  app.use((req, res) => {
-    res
-      .status(404)
-      .json({ success: false, result: "Ressource does not exist." });
-  });
-
-  const PORT = 3001;
-  app.listen(PORT, () => {
-    // eslint-disable-next-line no-console
-    console.log(`Example app listening at http://localhost:${PORT}`);
+  // The `listen` method launches a web server.
+  server.listen().then(({ url }) => {
+    console.log(`🚀  Server ready at ${url}`);
   });
 };
 

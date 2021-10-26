@@ -13,4 +13,7 @@ module.exports = {
   },
   plugins: ["@typescript-eslint", "prettier"],
   ignorePatterns: [".eslintrc.js"],
+  rules: {
+    "class-methods-use-this": 0,
+  },
 };
