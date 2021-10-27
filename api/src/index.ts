@@ -25,7 +25,7 @@ const runServer = async () => {
   const server = new ApolloServer({ schema });
 
   // The `listen` method launches a web server.
-  server.listen().then(({ url }) => {
+  server.listen({ port: 3004 }).then(({ url }) => {
     console.log(`🚀  Server ready at ${url}`);
   });
 };
