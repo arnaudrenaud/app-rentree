@@ -1,12 +1,12 @@
-import { ArgsType, Field } from "type-graphql";
+import { ArgsType, Field, Int } from "type-graphql";
 
 @ArgsType()
 class UpdateWilderInput {
-  @Field()
-  initialName!: string;
+  @Field(() => Int)
+  id!: number;
 
   @Field({ nullable: true })
-  newName?: string;
+  name?: string;
 
   @Field({ nullable: true })
   city?: string;

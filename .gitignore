@@ -196,3 +196,5 @@ $RECYCLE.BIN/
 
 # Build
 build
+
+sqlite.db

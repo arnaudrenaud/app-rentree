@@ -1,9 +1,9 @@
-import { ArgsType, Field } from "type-graphql";
+import { ArgsType, Field, Int } from "type-graphql";
 
 @ArgsType()
 class DeleteWilderInput {
-  @Field()
-  name!: string;
+  @Field(() => Int)
+  id!: number;
 }
 
 export default DeleteWilderInput;

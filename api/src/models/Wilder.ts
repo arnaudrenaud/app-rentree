@@ -1,26 +1,34 @@
-import { Schema, model } from "mongoose";
 import { Field, ID, ObjectType } from "type-graphql";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 
 import Skill from "./Skill";
 
+@Entity()
 @ObjectType()
-class Wilder {
+class Wilder extends BaseEntity {
+  @PrimaryGeneratedColumn()
   @Field(() => ID)
+  id!: number;
+
+  @Column()
+  @Field()
   name!: string;
 
+  @Column()
   @Field()
   city!: string;
 
+  @ManyToMany(() => Skill)
+  @JoinTable()
   @Field(() => [Skill])
   skills!: Skill[];
 }
 
-const WilderSchema = new Schema({
-  name: { type: String, unique: true },
-  city: String,
-  skills: [{ title: String, votes: Number }],
-});
-const WilderModel = model("wilder", WilderSchema);
-
-export default WilderModel;
-export { Wilder };
+export default Wilder;

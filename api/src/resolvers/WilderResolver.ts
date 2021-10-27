@@ -1,6 +1,6 @@
 import { Args, Mutation, Query, Resolver } from "type-graphql";
 
-import WilderModel, { Wilder } from "../models/Wilder";
+import Wilder from "../models/Wilder";
 import CreateWilderInput from "./CreateWilderInput";
 import DeleteWilderInput from "./DeleteWilderInput";
 import UpdateWilderInput from "./UpdateWilderInput";
@@ -9,41 +9,32 @@ import UpdateWilderInput from "./UpdateWilderInput";
 class WilderResolver {
   @Query(() => [Wilder])
   async wilders() {
-    const wilders = await WilderModel.find();
+    const wilders = await Wilder.find({ relations: ["skills"] });
     return wilders;
   }
 
   @Mutation(() => Wilder)
   async createWilder(@Args() { name, city }: CreateWilderInput) {
-    const wilder = new WilderModel({ name, city });
-    const result = await wilder.save();
-    return result;
-  }
-
-  @Mutation(() => Wilder)
-  async deleteWilder(@Args() { name }: DeleteWilderInput) {
-    const wilder = await WilderModel.findOne({ name });
-    if (!wilder) {
-      throw Error("Wilder does not exist.");
-    }
-    await WilderModel.deleteOne({ name });
+    const wilder = new Wilder();
+    wilder.name = name;
+    wilder.city = city;
+    await wilder.save();
     return wilder;
   }
 
   @Mutation(() => Wilder)
-  async updateWilder(
-    @Args() { initialName, newName, city }: UpdateWilderInput
-  ) {
-    const wilder = await WilderModel.findOne({ name: initialName });
-    if (!wilder) {
-      throw Error("Wilder does not exist.");
-    }
-    const result = await WilderModel.findOneAndUpdate(
-      { name: initialName },
-      { name: newName, city },
-      { returnOriginal: false }
-    );
-    return result;
+  async deleteWilder(@Args() { id }: DeleteWilderInput) {
+    const wilder = await Wilder.findOneOrFail({ id });
+    await Wilder.remove(wilder);
+    return wilder;
+  }
+
+  @Mutation(() => Wilder)
+  async updateWilder(@Args() { id, name, city }: UpdateWilderInput) {
+    const wilder = await Wilder.findOneOrFail({ id });
+    await Wilder.update(wilder, { name, city });
+    const updatedWilder = await Wilder.findOne({ id });
+    return updatedWilder;
   }
 }
 

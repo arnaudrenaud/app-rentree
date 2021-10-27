@@ -1,25 +1,25 @@
 import { ApolloServer } from "apollo-server";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
+import { createConnection } from "typeorm";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 
-import WilderModel from "./models/Wilder";
+import Wilder from "./models/Wilder";
+import Skill from "./models/Skill";
 import WilderResolver from "./resolvers/WilderResolver";
 
 dotenv.config();
 
 const runServer = async () => {
-  const { MONGO_URL } = process.env;
-  if (!MONGO_URL) {
-    throw Error("A MONGO_URL must be provided in environment.");
-  }
-  await mongoose.connect(MONGO_URL, { autoIndex: true });
-
+  await createConnection({
+    type: "sqlite",
+    database: "./sqlite.db",
+    entities: [Wilder, Skill],
+    synchronize: true,
+    logging: true,
+  });
   // eslint-disable-next-line no-console
   console.log("Connected to database");
-
-  await WilderModel.init();
 
   const schema = await buildSchema({ resolvers: [WilderResolver] });
   const server = new ApolloServer({ schema });
