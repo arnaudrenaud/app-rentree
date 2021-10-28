@@ -7,12 +7,18 @@ import "react-toastify/dist/ReactToastify.css";
 
 import * as styled from "./CreateWilderForm.styled";
 import { Link } from "react-router-dom";
+import { gql, useMutation } from "@apollo/client";
+import { CreateWilder, CreateWilderVariables } from "../schemaTypes";
 
-const CreateWilderForm = ({
-  onSuccess,
-}: {
-  onSuccess: () => Promise<void>;
-}) => {
+const CREATE_WILDER = gql`
+  mutation CreateWilder($name: String!, $city: String!) {
+    createWilder(name: $name, city: $city) {
+      id
+    }
+  }
+`;
+
+const CreateWilderForm = () => {
   const [name, setName] = useState("");
   const [city, setCity] = useState("Bordeaux");
 
@@ -20,25 +26,28 @@ const CreateWilderForm = ({
     toast.success("Wilder has been created");
   const notifyError = (error: ToastContent) => toast.error(error);
 
-  const submitForm = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    try {
-      await axios.post("/wilders", { name, city });
-      notifyWilderHasBeenCreated();
-      onSuccess();
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        notifyError(error.response?.data.result);
-      }
+  const [createWilder] = useMutation<CreateWilder, CreateWilderVariables>(
+    CREATE_WILDER,
+    {
+      onCompleted: notifyWilderHasBeenCreated,
+      onError: (error) => {
+        notifyError(error.message);
+      },
+      refetchQueries: ["GetWilders"],
     }
-  };
+  );
 
   return (
     <styled.Container>
       <>
         <Link to="/">Afficher la liste des wilders</Link>
         <h2>Ajouter un nouveau wilder</h2>
-        <form onSubmit={submitForm}>
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            createWilder({ variables: { city, name } });
+          }}
+        >
           <label>
             Name:{" "}
             <input
@@ -69,10 +78,6 @@ const CreateWilderForm = ({
       </>
     </styled.Container>
   );
-};
-
-CreateWilderForm.propTypes = {
-  onSuccess: PropTypes.func,
 };
 
 export default CreateWilderForm;

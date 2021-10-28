@@ -1,31 +1,35 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useQuery } from "@apollo/client";
+import gql from "graphql-tag";
 import { Link, Route, Switch } from "react-router-dom";
+import { GetWilders } from "../schemaTypes";
 
-import { WilderType } from "../types";
 import "./App.css";
 import * as styled from "./App.styled";
 import Loader from "./atoms/Loader";
 import CreateWilderForm from "./CreateWilderForm";
 import Wilder from "./Wilder";
 
-const App = () => {
-  const [wilders, setWilders] = useState<WilderType[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+const GET_WILDERS = gql`
+  query GetWilders {
+    wilders {
+      id
+      name
+      city
+      skills {
+        title
+        votes
+      }
+    }
+  }
+`;
 
-  const fetchWilders = async () => {
-    const response = await axios("/wilders");
-    setWilders(response.data.result);
-    setLoading(false);
-  };
+const App = () => {
+  const { loading, data } = useQuery<GetWilders>(GET_WILDERS);
 
   const removeWilder = (name: string) => {
-    setWilders(wilders.filter((wilder) => wilder.name !== name));
+    // TODO: optimistic update of wilders after removing wilder
+    // setWilders(wilders.filter((wilder) => wilder.name !== name));
   };
-
-  useEffect(() => {
-    fetchWilders();
-  }, []);
 
   return (
     <div>
@@ -44,10 +48,10 @@ const App = () => {
               <Loader />
             ) : (
               <section className="card-row">
-                {wilders.map((wilder) => {
+                {data?.wilders.map((wilder) => {
                   return (
                     <Wilder
-                      key={wilder._id}
+                      key={wilder.id}
                       name={wilder.name}
                       city={wilder.city}
                       skills={wilder.skills}
@@ -60,7 +64,7 @@ const App = () => {
           </styled.Container>
         </Route>
         <Route path="/create-wilder">
-          <CreateWilderForm onSuccess={fetchWilders} />
+          <CreateWilderForm />
         </Route>
       </Switch>
 

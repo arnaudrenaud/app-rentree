@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.4.16",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -12,6 +13,7 @@
     "@types/react-dom": "^17.0.9",
     "axios": "^0.21.4",
     "focus-trap-react": "^8.7.1",
+    "graphql": "^15.7.1",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -26,7 +28,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "generate-gql-types": "apollo client:codegen --watch --includes='src/**/*.tsx' --endpoint=http://localhost:3004/graphql --target typescript --outputFlat src/schemaTypes.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -49,6 +52,7 @@
   "proxy": "http://localhost:3004",
   "devDependencies": {
     "@types/react-router-dom": "^5.3.0",
-    "@types/styled-components": "^5.1.14"
+    "@types/styled-components": "^5.1.14",
+    "apollo": "^2.33.7"
   }
 }
