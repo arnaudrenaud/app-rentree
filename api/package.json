@@ -9,7 +9,7 @@
     "build": "tsc",
     "build:watch": "tsc -w",
     "start": "node build/.",
-    "start:watch": "npm run build && (npm run build:watch & nodemon build/.)"
+    "start:watch": "npm run build && (npm run build:watch & nodemon --inspect build/.)"
   },
   "author": "",
   "license": "ISC",
