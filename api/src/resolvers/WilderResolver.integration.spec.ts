@@ -1,10 +1,10 @@
 import { ApolloServer } from "apollo-server";
 import { getConnection } from "typeorm";
-import getApolloServer from "./apollo-server";
-import getDatabaseConnection from "./database-connection";
-import Wilder from "./models/Wilder";
+import getApolloServer from "../apollo-server";
+import getDatabaseConnection from "../database-connection";
+import Wilder from "../models/Wilder";
 
-describe("Server", () => {
+describe("WilderResolver", () => {
   let server: ApolloServer;
 
   beforeAll(async () => {
@@ -70,6 +70,44 @@ describe("Server", () => {
             },
           ]
         `);
+      });
+    });
+  });
+
+  describe("mutation createWilder", () => {
+    const CREATE_WILDER = `
+    mutation($name: String!, $city: String!) {
+      createWilder(name: $name, city: $city) {
+        id
+        name
+        city
+        skills {
+          title
+        }
+      }
+    }
+    `;
+
+    it("creates and returns wilder", async () => {
+      const result = await server.executeOperation({
+        query: CREATE_WILDER,
+        variables: {
+          name: "Nouveau",
+          city: "Bordeaux",
+        },
+      });
+
+      expect(await Wilder.findOne({ name: "Nouveau" })).toHaveProperty(
+        "city",
+        "Bordeaux"
+      );
+
+      expect(result.errors).toBeUndefined();
+      expect(result.data?.createWilder).toEqual({
+        id: "1",
+        name: "Nouveau",
+        city: "Bordeaux",
+        skills: [],
       });
     });
   });

@@ -15,11 +15,11 @@ class WilderResolver {
 
   @Mutation(() => Wilder)
   async createWilder(@Args() { name, city }: CreateWilderInput) {
-    const wilder = new Wilder();
-    wilder.name = name;
-    wilder.city = city;
-    await wilder.save();
-    return wilder;
+    const wilderToBeCreated = new Wilder();
+    wilderToBeCreated.name = name;
+    wilderToBeCreated.city = city;
+    const newWilder = await wilderToBeCreated.save();
+    return Wilder.findOne({ id: newWilder.id }, { relations: ["skills"] });
   }
 
   @Mutation(() => Wilder)
