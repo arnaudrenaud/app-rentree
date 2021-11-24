@@ -9,7 +9,7 @@ import Loader from "./atoms/Loader";
 import CreateWilderForm from "./CreateWilderForm";
 import Wilder from "./Wilder";
 
-const GET_WILDERS = gql`
+export const GET_WILDERS = gql`
   query GetWilders {
     wilders {
       id
@@ -45,9 +45,13 @@ const App = () => {
             <h2>Wilders</h2>
             <Link to="/create-wilder">Ajouter un nouveau wilder</Link>
             {loading ? (
-              <Loader />
+              <Loader role="progressbar" />
             ) : (
-              <section className="card-row">
+              <section
+                className="card-row"
+                role="list"
+                data-testid="wilderList"
+              >
                 {data?.wilders.map((wilder) => {
                   return (
                     <Wilder
