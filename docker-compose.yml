@@ -1,6 +1,11 @@
 version: '3.9'
 
 services:
+  web-client:
+    build: ./web-client
+    ports:
+      - 3000:3000
+
   api:
     build: ./api
     ports:
