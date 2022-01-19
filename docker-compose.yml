@@ -8,6 +8,9 @@ services:
 
   api:
     build: ./api
+    volumes:
+      - ./api:/app
+      - /app/node_modules
     ports:
       - 3004:3004
     depends_on:
