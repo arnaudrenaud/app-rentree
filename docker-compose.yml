@@ -3,6 +3,9 @@ version: '3.9'
 services:
   web-client:
     build: ./web-client
+    volumes:
+      - ./web-client:/app
+      - /app/node_modules
     ports:
       - 3000:3000
 
