@@ -5,3 +5,17 @@ services:
     build: ./api
     ports:
       - 3004:3004
+    depends_on:
+      - database
+    environment:
+      - DATABASE_URL=postgres://postgres:database_password@database:5432/postgres
+
+  database:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: database_password
+    volumes:
+      - database-volume:/var/lib/postgresql/data
+
+volumes:
+  database-volume:

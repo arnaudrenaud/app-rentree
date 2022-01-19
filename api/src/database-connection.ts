@@ -2,10 +2,10 @@ import { createConnection } from "typeorm";
 import Wilder from "./models/Wilder";
 import Skill from "./models/Skill";
 
-export default async (database: string, logging = false) => {
+export default async (url: string, logging = false) => {
   await createConnection({
-    type: "sqlite",
-    database,
+    type: "postgres",
+    url,
     entities: [Wilder, Skill],
     synchronize: true,
     logging,

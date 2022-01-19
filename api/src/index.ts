@@ -7,7 +7,11 @@ import getDatabaseConnection from "./database-connection";
 dotenv.config();
 
 const runServer = async () => {
-  await getDatabaseConnection("./sqlite.db");
+  if (!process.env.DATABASE_URL) {
+    throw Error("DATABASE_URL must be set in environment.");
+  }
+
+  await getDatabaseConnection(process.env.DATABASE_URL);
   // eslint-disable-next-line no-console
   console.log("Connected to database");
 
