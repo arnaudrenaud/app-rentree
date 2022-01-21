@@ -9,9 +9,24 @@ describe("WilderResolver", () => {
 
   beforeAll(async () => {
     server = await getApolloServer();
+
+    if (!process.env.TEST_DATABASE_URL) {
+      throw Error("TEST_DATABASE_URL must be set in environment.");
+    }
+
+    return getDatabaseConnection(process.env.TEST_DATABASE_URL);
   });
-  beforeEach(() => getDatabaseConnection(":memory:"));
-  afterEach(() => getConnection().close());
+  beforeEach(async () => {
+    const entities = getConnection().entityMetadatas;
+    // eslint-disable-next-line no-restricted-syntax
+    for (const entity of entities) {
+      const repository = getConnection().getRepository(entity.name);
+      await repository.query(
+        `TRUNCATE ${entity.tableName} RESTART IDENTITY CASCADE;`
+      );
+    }
+  });
+  afterAll(() => getConnection().close());
 
   describe("query wilders", () => {
     const GET_WILDERS = `

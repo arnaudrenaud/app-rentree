@@ -10,7 +10,7 @@ import {
 
 import Skill from "./Skill";
 
-@Entity()
+@Entity({ orderBy: { id: "ASC" } })
 @ObjectType()
 class Wilder extends BaseEntity {
   @PrimaryGeneratedColumn()

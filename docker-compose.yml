@@ -18,8 +18,10 @@ services:
       - 3004:3004
     depends_on:
       - database
+      - test-database
     environment:
       - DATABASE_URL=postgres://postgres:database_password@database:5432/postgres
+      - TEST_DATABASE_URL=postgres://postgres:database_password@test-database:5432/postgres
 
   database:
     image: postgres
@@ -27,6 +29,11 @@ services:
       POSTGRES_PASSWORD: database_password
     volumes:
       - database-volume:/var/lib/postgresql/data
+
+  test-database:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: database_password
 
 volumes:
   database-volume:
