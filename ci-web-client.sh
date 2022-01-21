@@ -1,0 +1,1 @@
+docker compose -f docker-compose.ci.web-client.yml up --build --exit-code-from web-client

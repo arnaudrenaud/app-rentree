@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  api:
+    build:
+      context: ./api
+      target: ci
+    depends_on:
+      - test-database
+    environment:
+      - TEST_DATABASE_URL=postgres://postgres:database_password@test-database:5432/postgres
+
+  test-database:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: database_password

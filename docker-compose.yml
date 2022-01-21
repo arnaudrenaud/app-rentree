@@ -2,7 +2,9 @@ version: '3.9'
 
 services:
   web-client:
-    build: ./web-client
+    build:
+      context: ./web-client
+      target: development
     volumes:
       - ./web-client:/app
       - /app/node_modules
@@ -10,7 +12,9 @@ services:
       - 3000:3000
 
   api:
-    build: ./api
+    build:
+      context: ./api
+      target: development
     volumes:
       - ./api:/app
       - /app/node_modules

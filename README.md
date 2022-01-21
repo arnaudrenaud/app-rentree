@@ -29,3 +29,12 @@ Run tests for API in watch mode:
 ```
 ./test-api-watch.sh
 ```
+
+### Continuous integration (CI)
+
+Run CI checks:
+
+```
+./ci-web-client.sh
+./ci-api.sh
+```
