@@ -1,26 +1,42 @@
-import dotenv from "dotenv";
 import "reflect-metadata";
+import { createServer } from "http";
+import { execute, subscribe } from "graphql";
+import { SubscriptionServer } from "subscriptions-transport-ws";
 
-import getApolloServer from "./apollo-server";
 import getDatabaseConnection from "./database-connection";
+import getExpressServer from "./express-server";
 
-dotenv.config();
-
-const runServer = async () => {
+const main = async () => {
   if (!process.env.DATABASE_URL) {
     throw Error("DATABASE_URL must be set in environment.");
   }
 
-  await getDatabaseConnection(process.env.DATABASE_URL);
+  getDatabaseConnection(process.env.DATABASE_URL);
   // eslint-disable-next-line no-console
   console.log("Connected to database");
 
-  const server = await getApolloServer();
+  const { expressServer, apolloServer, graphQLSchema } =
+    await getExpressServer();
 
-  // The `listen` method launches a web server.
-  server.listen({ port: 3004 }).then(({ url }) => {
-    console.log(`🚀  Server ready at ${url}`);
+  const server = createServer(expressServer);
+  server.listen(3004, () => {
+    console.log(
+      `🚀 Server ready at http://localhost:3004${apolloServer.graphqlPath}`
+    );
+    // Set up the WebSocket for handling GraphQL subscriptions
+    // eslint-disable-next-line no-new
+    new SubscriptionServer(
+      {
+        execute,
+        subscribe,
+        schema: graphQLSchema,
+      },
+      {
+        server,
+        path: apolloServer.graphqlPath,
+      }
+    );
   });
 };
 
-runServer();
+main();

@@ -1,14 +1,46 @@
+import { WebSocketLink } from "@apollo/client/link/ws";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  split,
+  HttpLink,
+} from "@apollo/client";
 
 import "./index.css";
 import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
+import { getMainDefinition } from "@apollo/client/utilities";
+
+const GRAPHQL_ENDPOINT = "/graphql";
+const httpLink = new HttpLink({ uri: GRAPHQL_ENDPOINT });
+
+// TODO: query origin server in production
+const webSocketProtocolAndHost = `ws://localhost:3004`;
+const wsLink = new WebSocketLink({
+  uri: `${webSocketProtocolAndHost}${GRAPHQL_ENDPOINT}`,
+  options: {
+    reconnect: true,
+  },
+});
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    );
+  },
+  wsLink,
+  httpLink
+);
 
 const client = new ApolloClient({
-  uri: "/graphql",
+  link: splitLink,
   cache: new InMemoryCache(),
 });
 
