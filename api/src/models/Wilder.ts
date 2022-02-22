@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, Int, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -29,6 +29,10 @@ class Wilder extends BaseEntity {
   @JoinTable()
   @Field(() => [Skill])
   skills!: Skill[];
+
+  @Column({ type: "integer", unsigned: true, default: 0 })
+  @Field(() => Int)
+  missingSignatureCount!: number;
 }
 
 export default Wilder;
