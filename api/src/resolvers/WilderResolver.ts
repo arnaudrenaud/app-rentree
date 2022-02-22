@@ -1,4 +1,4 @@
-import { Args, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Args, Mutation, Query, Resolver } from "type-graphql";
 
 import Wilder from "../models/Wilder";
 import CreateWilderInput from "./CreateWilderInput";
@@ -33,6 +33,17 @@ class WilderResolver {
   async updateWilder(@Args() { id, name, city }: UpdateWilderInput) {
     const wilder = await Wilder.findOneOrFail({ id });
     await Wilder.update(wilder, { name, city });
+    const updatedWilder = await Wilder.findOne({ id });
+    return updatedWilder;
+  }
+
+  @Mutation(() => Wilder)
+  async incrementMissingSignatureCount(@Arg("id", () => String) _id: string) {
+    const id = parseInt(_id, 10);
+    const wilder = await Wilder.findOneOrFail({ id });
+    await Wilder.update(wilder, {
+      missingSignatureCount: wilder.missingSignatureCount + 1,
+    });
     const updatedWilder = await Wilder.findOne({ id });
     return updatedWilder;
   }

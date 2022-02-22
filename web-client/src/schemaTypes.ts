@@ -19,6 +19,7 @@ export interface GetWilders_wilders {
   name: string;
   city: string;
   skills: GetWilders_wilders_skills[];
+  missingSignatureCount: number;
 }
 
 export interface GetWilders {

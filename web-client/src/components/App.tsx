@@ -19,6 +19,7 @@ export const GET_WILDERS = gql`
         title
         votes
       }
+      missingSignatureCount
     }
   }
 `;
@@ -56,10 +57,12 @@ const App = () => {
                   return (
                     <Wilder
                       key={wilder.id}
+                      id={wilder.id}
                       name={wilder.name}
                       city={wilder.city}
                       skills={wilder.skills}
                       onDelete={removeWilder}
+                      missingSignatureCount={wilder.missingSignatureCount}
                     />
                   );
                 })}

@@ -15,6 +15,7 @@ const GET_WILDERS_MOCK: MockedResponse<GetWilders> = {
           city: "Paris",
           skills: [],
           __typename: "Wilder",
+          missingSignatureCount: 0,
         },
         {
           id: "2",
@@ -22,6 +23,7 @@ const GET_WILDERS_MOCK: MockedResponse<GetWilders> = {
           city: "Bordeaux",
           skills: [],
           __typename: "Wilder",
+          missingSignatureCount: 2,
         },
       ],
     },

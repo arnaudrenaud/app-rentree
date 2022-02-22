@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
-import { SkillType } from "../types";
+import { GetWilders_wilders_skills } from "../schemaTypes";
 import * as styled from "./Skill.styled";
 
-const Skill = ({ title, votes }: SkillType) => {
+type SkillProps = Omit<GetWilders_wilders_skills, "__typename">;
+
+const Skill = ({ title, votes }: SkillProps) => {
   return (
     <li>
       {title}
