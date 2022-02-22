@@ -1,9 +1,21 @@
-import { Arg, Args, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Args,
+  Mutation,
+  Publisher,
+  PubSub,
+  Query,
+  Resolver,
+  Root,
+  Subscription,
+} from "type-graphql";
 
 import Wilder from "../models/Wilder";
 import CreateWilderInput from "./CreateWilderInput";
 import DeleteWilderInput from "./DeleteWilderInput";
 import UpdateWilderInput from "./UpdateWilderInput";
+
+const WILDERS_UPDATE_SUBSCRIPTION_TOPIC = "WILDERS_UPDATE";
 
 @Resolver(Wilder)
 class WilderResolver {
@@ -38,14 +50,23 @@ class WilderResolver {
   }
 
   @Mutation(() => Wilder)
-  async incrementMissingSignatureCount(@Arg("id", () => String) _id: string) {
+  async incrementMissingSignatureCount(
+    @Arg("id", () => String) _id: string,
+    @PubSub(WILDERS_UPDATE_SUBSCRIPTION_TOPIC) publish: Publisher<Wilder>
+  ) {
     const id = parseInt(_id, 10);
     const wilder = await Wilder.findOneOrFail({ id });
     await Wilder.update(wilder, {
       missingSignatureCount: wilder.missingSignatureCount + 1,
     });
-    const updatedWilder = await Wilder.findOne({ id });
+    const updatedWilder = (await Wilder.findOne({ id })) as Wilder;
+    await publish(updatedWilder);
     return updatedWilder;
+  }
+
+  @Subscription(() => Wilder, { topics: WILDERS_UPDATE_SUBSCRIPTION_TOPIC })
+  async onWilderUpdate(@Root() wilder: Wilder) {
+    return wilder;
   }
 }
 

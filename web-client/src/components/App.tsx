@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useQuery, useSubscription } from "@apollo/client";
 import gql from "graphql-tag";
 import { Link, Route, Switch } from "react-router-dom";
 import { GetWilders } from "../schemaTypes";
@@ -24,8 +24,19 @@ export const GET_WILDERS = gql`
   }
 `;
 
+export const ON_WILDER_UPDATE = gql`
+  subscription OnWilderUpdate {
+    onWilderUpdate {
+      id
+      missingSignatureCount
+    }
+  }
+`;
+
 const App = () => {
   const { loading, data } = useQuery<GetWilders>(GET_WILDERS);
+
+  useSubscription(ON_WILDER_UPDATE);
 
   const removeWilder = (name: string) => {
     // TODO: optimistic update of wilders after removing wilder
