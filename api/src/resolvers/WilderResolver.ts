@@ -62,12 +62,10 @@ class WilderResolver {
   ) {
     const id = parseInt(_id, 10);
     const wilder = await Wilder.findOneOrFail({ id });
-    await Wilder.update(wilder, {
-      missingSignatureCount: wilder.missingSignatureCount + 1,
-    });
-    const updatedWilder = (await Wilder.findOne({ id })) as Wilder;
-    await publish(updatedWilder);
-    return updatedWilder;
+    wilder.missingSignatureCount += 1;
+    wilder.save();
+    await publish(wilder);
+    return wilder;
   }
 
   @Subscription(() => Wilder, { topics: WILDERS_UPDATE_SUBSCRIPTION_TOPIC })

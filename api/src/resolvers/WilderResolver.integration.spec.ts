@@ -192,4 +192,54 @@ describe("WilderResolver", () => {
       });
     });
   });
+
+  describe("mutation incrementMissingSignatureCount", () => {
+    const INCREMENT_MISSING_SIGNATURE_COUNT = `
+    mutation($id: String!) {incrementMissingSignatureCount(id: $id) {
+      id
+      missingSignatureCount
+    }}
+    `;
+
+    describe("when id does not match existing wilder", () => {
+      it("returns error", async () => {
+        const result = await server.executeOperation({
+          query: INCREMENT_MISSING_SIGNATURE_COUNT,
+          variables: { id: "1" },
+        });
+
+        expect(result.data).toMatchInlineSnapshot(`null`);
+        expect(result.errors).toMatchInlineSnapshot(`
+          Array [
+            [GraphQLError: Could not find any entity of type "Wilder" matching: {
+              "id": 1
+          }],
+          ]
+        `);
+      });
+    });
+
+    describe("when id matches existing wilder", () => {
+      it("updates wilder and returns wilder with updated count", async () => {
+        const wilder = new Wilder();
+        wilder.name = "Alex";
+        wilder.city = "Paris";
+        await wilder.save();
+
+        const result = await server.executeOperation({
+          query: INCREMENT_MISSING_SIGNATURE_COUNT,
+          variables: { id: wilder.id.toString() },
+        });
+
+        expect(result.data).toMatchInlineSnapshot(`
+          Object {
+            "incrementMissingSignatureCount": Object {
+              "id": "1",
+              "missingSignatureCount": 1,
+            },
+          }
+        `);
+      });
+    });
+  });
 });
