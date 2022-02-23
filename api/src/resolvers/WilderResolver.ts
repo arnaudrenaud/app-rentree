@@ -11,6 +11,7 @@ import {
 } from "type-graphql";
 
 import Wilder from "../models/Wilder";
+import WilderRepository from "../models/WilderRepository";
 import CreateWilderInput from "./CreateWilderInput";
 import DeleteWilderInput from "./DeleteWilderInput";
 import UpdateWilderInput from "./UpdateWilderInput";
@@ -21,38 +22,22 @@ const WILDERS_UPDATE_SUBSCRIPTION_TOPIC = "WILDERS_UPDATE";
 class WilderResolver {
   @Query(() => [Wilder])
   async wilders() {
-    const wilders = await Wilder.find({ relations: ["skills"] });
-    return wilders;
+    return WilderRepository.getWildersWithSkills();
   }
 
   @Mutation(() => Wilder)
   async createWilder(@Args() { name, city }: CreateWilderInput) {
-    const wilderToBeCreated = new Wilder();
-    wilderToBeCreated.name = name;
-    wilderToBeCreated.city = city;
-    const newWilder = await wilderToBeCreated.save();
-    return Wilder.findOne({ id: newWilder.id }, { relations: ["skills"] });
+    return WilderRepository.createWilder(name, city);
   }
 
   @Mutation(() => Wilder)
   async deleteWilder(@Args() { id }: DeleteWilderInput) {
-    const wilder = await Wilder.findOneOrFail({ id });
-    await Wilder.remove(wilder);
-    return wilder;
+    return WilderRepository.deleteWilder(id);
   }
 
   @Mutation(() => Wilder)
   async updateWilder(@Args() { id, name, city }: UpdateWilderInput) {
-    const wilder = await Wilder.findOneOrFail({ id });
-    if (name) {
-      wilder.name = name;
-    }
-    if (city) {
-      wilder.city = city;
-    }
-    await wilder.save();
-    const updatedWilder = await Wilder.findOne({ id });
-    return updatedWilder;
+    return WilderRepository.updateWilder(id, { name, city });
   }
 
   @Mutation(() => Wilder)
@@ -61,9 +46,8 @@ class WilderResolver {
     @PubSub(WILDERS_UPDATE_SUBSCRIPTION_TOPIC) publish: Publisher<Wilder>
   ) {
     const id = parseInt(_id, 10);
-    const wilder = await Wilder.findOneOrFail({ id });
-    wilder.missingSignatureCount += 1;
-    wilder.save();
+    const wilder =
+      await WilderRepository.incrementMissingSignatureCountForWilder(id);
     await publish(wilder);
     return wilder;
   }

@@ -33,6 +33,27 @@ class Wilder extends BaseEntity {
   @Column({ type: "integer", unsigned: true, default: 0 })
   @Field(() => Int)
   missingSignatureCount!: number;
+
+  async incrementMissingSignatureCount() {
+    this.missingSignatureCount += 1;
+    await this.save();
+    return this;
+  }
+
+  async update({ name, city }: { name?: string; city?: string }) {
+    if (name) {
+      this.name = name;
+    }
+    if (city) {
+      this.city = city;
+    }
+    await this.save();
+    return this;
+  }
+
+  async getWilderWithSkills() {
+    return Wilder.findOne({ id: this.id }, { relations: ["skills"] });
+  }
 }
 
 export default Wilder;
