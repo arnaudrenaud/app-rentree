@@ -1,9 +1,9 @@
 import { Field, ID, Int, ObjectType } from "type-graphql";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 @ObjectType()
-class Skill {
+class Skill extends BaseEntity {
   @PrimaryGeneratedColumn()
   @Field(() => ID)
   id!: number;
