@@ -44,7 +44,13 @@ class WilderResolver {
   @Mutation(() => Wilder)
   async updateWilder(@Args() { id, name, city }: UpdateWilderInput) {
     const wilder = await Wilder.findOneOrFail({ id });
-    await Wilder.update(wilder, { name, city });
+    if (name) {
+      wilder.name = name;
+    }
+    if (city) {
+      wilder.city = city;
+    }
+    await wilder.save();
     const updatedWilder = await Wilder.findOne({ id });
     return updatedWilder;
   }

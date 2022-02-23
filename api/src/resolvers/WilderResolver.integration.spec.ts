@@ -126,4 +126,70 @@ describe("WilderResolver", () => {
       });
     });
   });
+
+  describe("mutation updateWilder", () => {
+    const UPDATE_WILDER = `
+    mutation($id: Int!, $name: String, $city: String) {
+      updateWilder(id: $id, name: $name, city: $city) {
+        id
+        name
+        city
+      }
+    }
+    `;
+
+    const newName = "Nouveau nom";
+    const newCity = "Nouvelle ville";
+
+    describe("when id does not match existing wilder", () => {
+      it("returns error", async () => {
+        const result = await server.executeOperation({
+          query: UPDATE_WILDER,
+          variables: {
+            id: 1,
+            name: newName,
+            city: newCity,
+          },
+        });
+
+        expect(result.data).toBeNull();
+        expect(result.errors).toMatchInlineSnapshot(`
+          Array [
+            [GraphQLError: Could not find any entity of type "Wilder" matching: {
+              "id": 1
+          }],
+          ]
+        `);
+      });
+    });
+
+    describe("when id matches existing wilder", () => {
+      it("updates and returns wilder", async () => {
+        const wilder = new Wilder();
+        wilder.name = "Alex";
+        wilder.city = "Paris";
+        await wilder.save();
+
+        const result = await server.executeOperation({
+          query: UPDATE_WILDER,
+          variables: {
+            id: wilder.id,
+            name: newName,
+            city: newCity,
+          },
+        });
+
+        const wilderInDatabase = await Wilder.findOne({ id: wilder.id });
+        expect(wilderInDatabase?.name).toEqual(newName);
+        expect(wilderInDatabase?.city).toEqual(newCity);
+
+        expect(result.errors).toBeUndefined();
+        expect(result.data?.updateWilder).toEqual({
+          id: wilder.id.toString(),
+          name: newName,
+          city: newCity,
+        });
+      });
+    });
+  });
 });
