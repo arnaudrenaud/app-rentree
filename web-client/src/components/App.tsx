@@ -37,7 +37,6 @@ export const ON_WILDER_UPDATE = gql`
 export const GET_MY_PROFILE = gql`
   query GetMyProfile {
     myProfile {
-      id
       emailAddress
     }
   }
@@ -45,7 +44,8 @@ export const GET_MY_PROFILE = gql`
 
 const App = () => {
   const { loading, data } = useQuery<GetWilders>(GET_WILDERS);
-  const { data: myProfileData } = useQuery(GET_MY_PROFILE);
+  const { data: myProfileData, loading: myProfileLoading } =
+    useQuery(GET_MY_PROFILE);
 
   useSubscription(ON_WILDER_UPDATE);
 
@@ -53,8 +53,6 @@ const App = () => {
     // TODO: optimistic update of wilders after removing wilder
     // setWilders(wilders.filter((wilder) => wilder.name !== name));
   };
-
-  console.log({ myProfileData });
 
   return (
     <div>

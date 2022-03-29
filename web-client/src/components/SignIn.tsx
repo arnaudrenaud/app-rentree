@@ -1,11 +1,11 @@
 import { gql, useMutation } from "@apollo/client";
 import { useState } from "react";
 import { Redirect } from "react-router-dom";
+import { GET_MY_PROFILE } from "./App";
 
 const SIGN_IN = gql`
   mutation SignIn($emailAddress: String!, $password: String!) {
     signIn(emailAddress: $emailAddress, password: $password) {
-      id
       emailAddress
     }
   }
@@ -26,7 +26,10 @@ const SignIn = () => {
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          signIn({ variables: { emailAddress, password } });
+          signIn({
+            variables: { emailAddress, password },
+            refetchQueries: [GET_MY_PROFILE],
+          });
         }}
       >
         <label>
