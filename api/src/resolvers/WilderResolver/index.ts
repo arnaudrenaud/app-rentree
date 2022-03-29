@@ -10,8 +10,8 @@ import {
   Subscription,
 } from "type-graphql";
 
-import Wilder from "../models/Wilder";
-import WilderRepository from "../models/WilderRepository";
+import Wilder from "../../models/Wilder";
+import WilderRepository from "../../models/WilderRepository";
 import CreateWilderInput from "./CreateWilderInput";
 import DeleteWilderInput from "./DeleteWilderInput";
 import UpdateWilderInput from "./UpdateWilderInput";

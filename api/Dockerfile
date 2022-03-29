@@ -1,4 +1,4 @@
-FROM node:lts-alpine as common
+FROM node:16 as common
 
 WORKDIR /app
 

@@ -1,8 +1,8 @@
 import { ApolloServer } from "apollo-server-express";
 import { getConnection } from "typeorm";
-import getApolloServer from "../apollo-server";
-import getDatabaseConnection from "../database-connection";
-import Wilder from "../models/Wilder";
+import getApolloServer from "../../apollo-server";
+import getDatabaseConnection from "../../database-connection";
+import Wilder from "../../models/Wilder";
 
 describe("WilderResolver", () => {
   let server: ApolloServer;
