@@ -61,7 +61,12 @@ const App = () => {
       <styled.Header>
         <styled.Container>
           <h1>Wilders Book</h1>
-          <div>{myProfileData?.myProfile.emailAddress}</div>
+          <div>
+            {!myProfileLoading &&
+              (myProfileData?.myProfile.emailAddress || (
+                <Link to="/sign-in">Me connecter</Link>
+              ))}
+          </div>
         </styled.Container>
       </styled.Header>
 
