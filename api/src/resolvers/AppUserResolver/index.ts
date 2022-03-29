@@ -1,4 +1,5 @@
-import { Args, Mutation, Resolver } from "type-graphql";
+import { Args, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import { CustomContext } from "../../CustomContext";
 import AppUser from "../../models/AppUser";
 import AppUserRepository from "../../models/AppUserRepository";
 import SignInInput from "./SignInInput";
@@ -15,9 +16,15 @@ class AppUserResolver {
 
   @Mutation(() => AppUser)
   async signIn(
-    @Args() { emailAddress, password }: SignInInput
+    @Args() { emailAddress, password }: SignInInput,
+    @Ctx() { onSessionCreated }: CustomContext
   ): Promise<AppUser | undefined> {
-    return AppUserRepository.signIn(emailAddress, password);
+    return AppUserRepository.signIn(emailAddress, password, onSessionCreated);
+  }
+
+  @Query(() => AppUser)
+  async myProfile(@Ctx() { appUser }: CustomContext): Promise<AppUser | null> {
+    return appUser;
   }
 }
 

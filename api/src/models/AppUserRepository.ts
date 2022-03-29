@@ -1,5 +1,6 @@
 import { compare, hash } from "bcrypt";
 import AppUser from "./AppUser";
+import AppUserSessionRepository from "./AppUserSessionRepository";
 
 class AppUserRepository extends AppUser {
   static findByEmailAddress = (
@@ -26,7 +27,8 @@ class AppUserRepository extends AppUser {
 
   static async signIn(
     emailAddress: string,
-    password: string
+    password: string,
+    onSessionCreated: (sessionId: string) => void
   ): Promise<AppUser> {
     const COULD_NOT_SIGN_IN =
       "Could not sign in with provided email address and password.";
@@ -39,6 +41,8 @@ class AppUserRepository extends AppUser {
     }
     const isPasswordCorrect = await compare(password, existingUser.password);
     if (isPasswordCorrect) {
+      const session = await AppUserSessionRepository.createNew(existingUser);
+      onSessionCreated(session.id);
       return existingUser;
     }
     throw Error(COULD_NOT_SIGN_IN);

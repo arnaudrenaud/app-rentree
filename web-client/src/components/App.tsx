@@ -7,6 +7,7 @@ import "./App.css";
 import * as styled from "./App.styled";
 import Loader from "./atoms/Loader";
 import CreateWilderForm from "./CreateWilderForm";
+import SignIn from "./SignIn";
 import Wilder from "./Wilder";
 
 export const GET_WILDERS = gql`
@@ -33,8 +34,18 @@ export const ON_WILDER_UPDATE = gql`
   }
 `;
 
+export const GET_MY_PROFILE = gql`
+  query GetMyProfile {
+    myProfile {
+      id
+      emailAddress
+    }
+  }
+`;
+
 const App = () => {
   const { loading, data } = useQuery<GetWilders>(GET_WILDERS);
+  const { data: myProfileData } = useQuery(GET_MY_PROFILE);
 
   useSubscription(ON_WILDER_UPDATE);
 
@@ -43,11 +54,14 @@ const App = () => {
     // setWilders(wilders.filter((wilder) => wilder.name !== name));
   };
 
+  console.log({ myProfileData });
+
   return (
     <div>
       <styled.Header>
         <styled.Container>
           <h1>Wilders Book</h1>
+          <div>{myProfileData?.myProfile.emailAddress}</div>
         </styled.Container>
       </styled.Header>
 
@@ -83,6 +97,9 @@ const App = () => {
         </Route>
         <Route path="/create-wilder">
           <CreateWilderForm />
+        </Route>
+        <Route path="/sign-in">
+          <SignIn />
         </Route>
       </Switch>
 
