@@ -33,6 +33,9 @@ const SignIn = () => {
           Email :
           <input
             type="email"
+            id="email"
+            name="email"
+            autoComplete="email"
             onChange={(event) => {
               setEmailAddress(event.target.value);
             }}
@@ -42,6 +45,9 @@ const SignIn = () => {
           Mot de passe :
           <input
             type="password"
+            id="password"
+            name="password"
+            autoComplete="current-password"
             onChange={(event) => {
               setPassword(event.target.value);
             }}
